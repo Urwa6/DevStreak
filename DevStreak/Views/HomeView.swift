@@ -6,19 +6,43 @@
 //
 
 import SwiftUI
+import SwiftData
+
+
 
 struct HomeView: View {
+    
+    //Fetch Habits from SWiftdata database
+    @Query var habits: [Habit]
+    //Controls whether the Add habit sheet is visible 
+    @State private var showAddHabit = false
+   
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List{
+                ForEach(habits) { habit in
+                    HabitRowView(habit: habit)
+                }
+                
+            }
+            .navigationTitle("DevStreak 🔥")
+            .toolbar{
+                Button{
+                    showAddHabit = true
+                }
+            label: {
+                    Image(systemName: "plus")
+                }
+            }
+            // Sheet for adding habits (IMPORTANT PART)
+                     .sheet(isPresented: $showAddHabit) {
+                         AddHabitView()
+                     }
         }
-        .padding()
     }
 }
+    #Preview {
+        HomeView()
+    }
 
-#Preview {
-    HomeView()
-}
