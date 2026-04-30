@@ -8,17 +8,25 @@
 import SwiftUI
 import SwiftData
 
+// View responsible for creating a new Habit
+// Uses HabitViewModel to handle data creation logic
+
 struct AddHabitView: View {
-    
+   
+    //Injected ViewModel used to manage Habit creation
     let viewModel: HabitViewModel
+    
+    //Controls view dismissal(Sheet close)
     @Environment(\.dismiss) var dismiss
     
+    //For USER's input
     @State private var name: String = ""
     @State private var icon: String = "flame"
     
     var body: some View {
             NavigationStack {
                 
+                //Form for entering habit details
                 Form {
                     
                     TextField("Habit name", text: $name)
