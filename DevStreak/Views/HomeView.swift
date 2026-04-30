@@ -12,20 +12,28 @@ import SwiftData
 
 struct HomeView: View {
     
+    @Environment(\.modelContext) var context
+    
     //Fetch Habits from SWiftdata database
     @Query var habits: [Habit]
     //Controls whether the Add habit sheet is visible 
     @State private var showAddHabit = false
+    
+    // ViewModel
+       var viewModel: HabitViewModel {
+           HabitViewModel(context: context)
+       }
    
     
     var body: some View {
         NavigationStack {
             List{
                 ForEach(habits) { habit in
-                    HabitRowView(habit: habit)
+                    HabitRowView(habit: habit, viewModel: viewModel)
                 }
                 
             }
+        
             .navigationTitle("DevStreak 🔥")
             .toolbar{
                 Button{
@@ -37,12 +45,20 @@ struct HomeView: View {
             }
             // Sheet for adding habits (IMPORTANT PART)
                      .sheet(isPresented: $showAddHabit) {
-                         AddHabitView()
+                         AddHabitView(viewModel : viewModel)
                      }
+                     
         }
     }
 }
+
     #Preview {
+        let container = try! ModelContainer(for: Habit.self, configurations: .init(isStoredInMemoryOnly: true))
+
         HomeView()
+        
+            .modelContainer(container)
+        
+    
     }
 

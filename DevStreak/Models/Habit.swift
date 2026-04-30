@@ -29,4 +29,16 @@ class Habit {
         //Set creation date to now
         self.createdAt = Date()
     }
+    func markCompletedToday() {
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        // Check if already completed today
+        let alreadyDone = completedDates.contains {
+            Calendar.current.isDate($0, inSameDayAs: today)
+        }
+        
+        if !alreadyDone {
+            completedDates.append(today)
+        }
+    }
 }

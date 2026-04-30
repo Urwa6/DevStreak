@@ -10,6 +10,8 @@ struct HabitRowView: View {
     
     let habit : Habit
     
+    let viewModel : HabitViewModel
+    
     var body: some View {
         
         HStack {
@@ -24,9 +26,22 @@ struct HabitRowView: View {
             
             Spacer()
             
+            Button {
+
+                     viewModel.markCompleted(habit)
+
+                 } label: {
+
+                     Image(systemName: "checkmark.circle")
+
+                         .foregroundColor(.green)
+
+                 }
+            
             //Placeholder streak
             //Will connect logic later
-            Text("🔥 0")
+            //Working streak
+            Text("🔥 \(viewModel.streak(for: habit))")
                 .foregroundStyle(.orange)
             
         }
