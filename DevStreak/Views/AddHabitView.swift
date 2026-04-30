@@ -10,11 +10,12 @@ import SwiftData
 
 struct AddHabitView: View {
     
-    @Environment(\.modelContext) var context
+    let viewModel: HabitViewModel
     @Environment(\.dismiss) var dismiss
     
     @State private var name: String = ""
     @State private var icon: String = "flame"
+    
     var body: some View {
             NavigationStack {
                 
@@ -34,18 +35,12 @@ struct AddHabitView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        addHabit()
+                        viewModel.addHabit(name: name, icon: icon)
+                        dismiss()
                     }
                 }
             }
         }
     }
     
-    func addHabit() {
-        let habit = Habit(name: name, icon: icon)
-        print("Saving habit:", habit.name)
-        context.insert(habit)
-        try? context.save()
-        dismiss()
-    }
 }
