@@ -24,8 +24,8 @@ class HabitViewModel {
     ///CREATE HABIT
     
     //Creates a new habit & saves it to the database
-    func addHabit(name: String, icon: String) {
-        let habit = Habit(name: name, icon: icon)
+    func addHabit(name: String, icon: String, targetPerDay: Int) {
+        let habit = Habit(name: name, icon: icon, targetPerDay: targetPerDay)
         context.insert(habit)
         //Persist changes
         try? context.save()
@@ -35,20 +35,30 @@ class HabitViewModel {
     ///MARK COMPLETED
     //Marks a habit as completed for today & save the update
     func markCompleted(_ habit: Habit) {
-        habit.markCompletedToday()
-        //Persist updated
+        habit.completedDates.append(Date())
         try? context.save()
-        
     }
+    
+    func completionsToday(for habit: Habit) -> Int {
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        return habit.completedDates.filter {
+            Calendar.current.isDate($0, inSameDayAs: today)
+        }.count
+    }
+       
+    
     
     ///STREAK LOGIC
     // Calculates current streak based on consecutive completion dates
     func streak(for habit: Habit) -> Int {
         // Sort dates from newest to oldest
-        let sorted = habit.completedDates.sorted(by: >)
+        let sorted = habit.completedDates
+            .map(Calendar.current.startOfDay(for:))
+            .sorted(by: >)
         
         var streak = 0
-        var currentDate = Date()
+        var currentDate = Calendar.current.startOfDay(for: Date())
         
         // Loop through completion dates and check continuity
         for date in sorted {
