@@ -22,6 +22,7 @@ struct AddHabitView: View {
     //For USER's input
     @State private var name: String = ""
     @State private var icon: String = "flame"
+    @State private var target: Int = 1
     
     var body: some View {
             NavigationStack {
@@ -32,6 +33,7 @@ struct AddHabitView: View {
                     TextField("Habit name", text: $name)
                     
                     TextField("SF Symbol (e.g. flame)", text: $icon)
+                    Stepper("Times per day: \(target)", value: $target, in: 1...20)
                 }
                 
                 .navigationTitle("New Habit")
@@ -43,7 +45,7 @@ struct AddHabitView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        viewModel.addHabit(name: name, icon: icon)
+                        viewModel.addHabit(name: name, icon: icon, targetPerDay: target)
                         dismiss()
                     }
                 }

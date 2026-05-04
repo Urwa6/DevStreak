@@ -18,11 +18,13 @@ struct HomeView: View {
     @Query var habits: [Habit]
     //Controls whether the Add habit sheet is visible 
     @State private var showAddHabit = false
+
     
     // ViewModel
        var viewModel: HabitViewModel {
-           HabitViewModel(context: context)
+        HabitViewModel(context: context)
        }
+ 
    
     
     var body: some View {
@@ -30,9 +32,9 @@ struct HomeView: View {
             List{
                 ForEach(habits) { habit in
                     HabitRowView(habit: habit, viewModel: viewModel)
-                }
                 
             }
+        }
         
             .navigationTitle("DevStreak 🔥")
             .toolbar{
@@ -44,21 +46,17 @@ struct HomeView: View {
                 }
             }
             // Sheet for adding habits (IMPORTANT PART)
-                     .sheet(isPresented: $showAddHabit) {
-                         AddHabitView(viewModel : viewModel)
-                     }
-                     
+            
+            .sheet(isPresented: $showAddHabit) {
+                           AddHabitView(viewModel: viewModel)
+                       }
         }
-    }
 }
-
+}
     #Preview {
-        let container = try! ModelContainer(for: Habit.self, configurations: .init(isStoredInMemoryOnly: true))
+        let container = try! ModelContainer(for: Habit.self)
 
         HomeView()
-        
             .modelContainer(container)
-        
-    
     }
-
+   

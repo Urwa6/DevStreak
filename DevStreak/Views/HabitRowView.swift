@@ -12,6 +12,17 @@ struct HabitRowView: View {
     
     let viewModel : HabitViewModel
     
+    //Mark-Computed Values
+    
+    var countToday: Int {
+          viewModel.completionsToday(for: habit)
+      }
+      
+      var isDoneToday: Bool {
+          countToday >= habit.targetPerDay
+      }
+    
+
     var body: some View {
         
         HStack {
@@ -26,17 +37,31 @@ struct HabitRowView: View {
             
             Spacer()
             
+            //Progress Button
+            
             Button {
+                
 
                      viewModel.markCompleted(habit)
 
                  } label: {
+                     
+                     
 
-                     Image(systemName: "checkmark.circle")
+                     Image(systemName: isDoneToday ? "checkmark.circle": "circle")
 
-                         .foregroundColor(.green)
-
+                         .foregroundColor( isDoneToday ? .green : .gray)
+                     
+                     Text("\(countToday)/\(habit.targetPerDay)")
+                         .font(.caption2)
+                         .foregroundColor(isDoneToday ? .green : .gray)
                  }
+                         .animation(.easeInOut, value: isDoneToday)
+                     }
+                
+                 .disabled(isDoneToday)
+                 .opacity(isDoneToday ? 0.5 : 1)
+            
             
             //Placeholder streak
             //Will connect logic later
@@ -45,6 +70,5 @@ struct HabitRowView: View {
                 .foregroundStyle(.orange)
             
         }
-        .padding(.vertical, 28)
     }
-}
+
