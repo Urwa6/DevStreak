@@ -18,6 +18,9 @@ struct HomeView: View {
     @Query var habits: [Habit]
     //Controls whether the Add habit sheet is visible 
     @State private var showAddHabit = false
+    
+    @State private var selectedHabit: Habit?
+    @State private var showEditSheet = false
 
     
     // ViewModel
@@ -25,38 +28,53 @@ struct HomeView: View {
         HabitViewModel(context: context)
        }
  
-   
-    
     var body: some View {
-        NavigationStack {
-            List{
-                ForEach(habits) { habit in
-                    HabitRowView(habit: habit, viewModel: viewModel)
+            NavigationStack {
                 
+                List {
+                    ForEach(habits) { habit in
+                        HabitRowView(habit: habit, viewModel: viewModel)
+                            .onLongPressGesture {
+                                selectedHabit = habit
+                                showEditSheet = true
+                            }
+                    }
+                    .onDelete { indexSet in
+                        for index in indexSet {
+                            let habit = habits[index]
+                            context.delete(habit)
+                        }
+                        try? context.save()
+                    }
+                }
+                
+                
+                .navigationTitle("DevStreak 🔥")
+                
+                .toolbar {
+                    Button {
+                        showAddHabit = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+                
+                .sheet(isPresented: $showAddHabit) {
+                    AddHabitView(viewModel: viewModel)
+                }
+                
+                .sheet(isPresented: $showEditSheet) {
+                    if let selectedHabit {
+                        EditHabitView(habit: selectedHabit)
+                    }
+                }
             }
         }
-        
-            .navigationTitle("DevStreak 🔥")
-            .toolbar{
-                Button{
-                    showAddHabit = true
-                }
-            label: {
-                    Image(systemName: "plus")
-                }
-            }
-            // Sheet for adding habits (IMPORTANT PART)
-            
-            .sheet(isPresented: $showAddHabit) {
-                           AddHabitView(viewModel: viewModel)
-                       }
-        }
-}
-}
-    #Preview {
-        let container = try! ModelContainer(for: Habit.self)
-
-        HomeView()
-            .modelContainer(container)
     }
-   
+            
+            #Preview {
+                let container = try! ModelContainer(for: Habit.self)
+                
+                HomeView()
+                    .modelContainer(container)
+            }
