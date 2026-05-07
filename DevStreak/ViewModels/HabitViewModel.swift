@@ -70,6 +70,13 @@ class HabitViewModel {
         var streak = 0
         var currentDate = calender.startOfDay(for: Date())
         
+        //If today isn't completed yet ,start from yesterday
+        let todayCompletion = grouped[currentDate]?.count ?? 0
+        
+        if todayCompletion < habit.targetPerDay{
+            currentDate = calender.date(byAdding: .day, value: -1, to: currentDate)!
+        }
+        
         while true {
             let completions = grouped[currentDate]?.count ?? 0
             if completions >= habit.targetPerDay{
@@ -81,8 +88,5 @@ class HabitViewModel {
             }
         }
         return streak
-        
-        
     }
-    
 }

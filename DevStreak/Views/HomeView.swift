@@ -18,10 +18,8 @@ struct HomeView: View {
     @Query var habits: [Habit]
     //Controls whether the Add habit sheet is visible 
     @State private var showAddHabit = false
-    
+    //Edit fix
     @State private var selectedHabit: Habit?
-    @State private var showEditSheet = false
-
     
     // ViewModel
        var viewModel: HabitViewModel {
@@ -32,12 +30,10 @@ struct HomeView: View {
             NavigationStack {
                 
                 //Adding background color
-                
                 ZStack {
                     Color("AppBackground")
                         .ignoresSafeArea()
-                
-                
+            
                 List {
                     ForEach(habits) { habit in
                         HabitRowView(habit: habit, viewModel: viewModel)
@@ -46,7 +42,6 @@ struct HomeView: View {
                         
                             .onLongPressGesture {
                                 selectedHabit = habit
-                                showEditSheet = true
                             }
                     }
                     .onDelete { indexSet in
@@ -71,19 +66,17 @@ struct HomeView: View {
                             .padding(25)
                     }
                 }
-                
+                //Add habit sheet
                 .sheet(isPresented: $showAddHabit) {
                     AddHabitView(viewModel: viewModel)
                 }
-                
-                .sheet(isPresented: $showEditSheet) {
-                    if let selectedHabit {
-                        EditHabitView(habit: selectedHabit)
+                //Edit Habit sheet
+                .sheet(item: $selectedHabit) { habit in
+                        EditHabitView(habit: habit)
                     }
                 }
             }
         }
-    }
             
             #Preview {
                 let container = try! ModelContainer(for: Habit.self)
