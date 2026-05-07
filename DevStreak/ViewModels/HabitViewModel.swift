@@ -15,7 +15,7 @@ class HabitViewModel {
     
     //Used for creating,updating & saving data
     var context: ModelContext
-      
+    
     //Initializer
     init (context: ModelContext) {
         self.context = context
@@ -35,7 +35,16 @@ class HabitViewModel {
     ///MARK COMPLETED
     //Marks a habit as completed for today & save the update
     func markCompleted(_ habit: Habit) {
-        habit.completedDates.append(Date())
+        let today = Calendar.current.startOfDay(for: Date())
+        //Check how many completions today
+        let countToday = habit.completedDates.filter{
+            Calendar.current.isDate($0, inSameDayAs: today)
+        }.count
+        //Only allow up to target per day
+        if countToday < habit.targetPerDay{
+           // habit.completedDates.append(Date())
+            habit.completedDates.append(Calendar.current.startOfDay(for: Date()))
+        }
         try? context.save()
     }
     
@@ -46,31 +55,34 @@ class HabitViewModel {
             Calendar.current.isDate($0, inSameDayAs: today)
         }.count
     }
-       
+    
     
     
     ///STREAK LOGIC
     // Calculates current streak based on consecutive completion dates
     func streak(for habit: Habit) -> Int {
-        // Sort dates from newest to oldest
-        let sorted = habit.completedDates
-            .map(Calendar.current.startOfDay(for:))
-            .sorted(by: >)
         
+        let calender = Calendar.current
+        //Group by day
+        let grouped = Dictionary(grouping: habit.completedDates){
+            calender.startOfDay(for: $0)
+        }
         var streak = 0
-        var currentDate = Calendar.current.startOfDay(for: Date())
+        var currentDate = calender.startOfDay(for: Date())
         
-        // Loop through completion dates and check continuity
-        for date in sorted {
-            if Calendar.current.isDate(date, inSameDayAs: currentDate) {
+        while true {
+            let completions = grouped[currentDate]?.count ?? 0
+            if completions >= habit.targetPerDay{
                 streak += 1
-                // Move one day back to check continuity
-                currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
-            } else {
+                currentDate = calender.date(byAdding: .day, value: -1, to: currentDate)!
+            }
+            else{
                 break
             }
-}
+        }
         return streak
+        
+        
     }
+    
 }
-
