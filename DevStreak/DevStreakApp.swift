@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+//For Notification
+import UserNotifications
 
 @main
 struct DevStreakApp: App {

@@ -23,6 +23,8 @@ struct AddHabitView: View {
     @State private var name: String = ""
     @State private var icon: String = "flame"
     @State private var target: Int = 1
+    //Error message
+    @State private var errorMessage:String = ""
     
     var body: some View {
             NavigationStack {
@@ -37,6 +39,13 @@ struct AddHabitView: View {
                 Form {
                     
                     TextField("Habit name", text: $name)
+                    
+                    //If the add habit is empty
+                    if !errorMessage.isEmpty{
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
                     
                     TextField("SF Symbol (e.g. flame)", text: $icon)
                     Stepper("Times per day: \(target)", value: $target, in: 1...20)
@@ -53,6 +62,11 @@ struct AddHabitView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        //If its empty
+                        if name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty{
+                            errorMessage = "Please enter a habit name"
+                            return
+                        }
                         viewModel.addHabit(name: name, icon: icon, targetPerDay: target)
                         dismiss()
                     }
