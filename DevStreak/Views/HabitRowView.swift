@@ -30,10 +30,12 @@ struct HabitRowView: View {
             //ICON
             Image(systemName: habit.icon)
                 .frame(width: 30)
+                .foregroundColor(Color("AppPrimary"))
             
             //Name
             Text(habit.name)
             .font(.headline)
+            .foregroundColor(Color("AppPrimary"))
             
             Spacer()
             
@@ -46,16 +48,19 @@ struct HabitRowView: View {
 
                  } label: {
                      
-                     
+                     HStack (spacing:6){
+                         Image(systemName: isDoneToday ? "checkmark.circle": "circle")
+                             .foregroundColor( isDoneToday ? Color (red:0.0, green:0.45, blue:0.0) : .gray)
+                         
+                         Text("\(countToday)/\(habit.targetPerDay)")
+                             .font(.caption2)
+                             .foregroundColor( isDoneToday ? Color (red:0.0, green:0.45, blue:0.0) : .gray)
+                            
+                     }
+                         
+                     }
 
-                     Image(systemName: isDoneToday ? "checkmark.circle": "circle")
-
-                         .foregroundColor( isDoneToday ? .green : .gray)
-                     
-                     Text("\(countToday)/\(habit.targetPerDay)")
-                         .font(.caption2)
-                         .foregroundColor(isDoneToday ? .green : .gray)
-                 }
+                
                          .animation(.easeInOut, value: isDoneToday)
                      }
                 
@@ -67,7 +72,7 @@ struct HabitRowView: View {
             //Will connect logic later
             //Working streak
             Text("🔥 \(viewModel.streak(for: habit))")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color("AppPrimary"))
             
         }
     }

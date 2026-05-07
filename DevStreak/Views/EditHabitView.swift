@@ -15,15 +15,23 @@ struct EditHabitView: View {
     
     var body: some View {
         NavigationStack {
+            ZStack{
+                //Color
+                Color("AppBackground")
+                    .ignoresSafeArea()
+                
             Form {
                 TextField("Name", text: $habit.name)
                 TextField("Icon", text: $habit.icon)
             }
+            .scrollContentBackground(.hidden)
+        }
             .navigationTitle("Edit Habit")
             .toolbar {
                 Button("Done") {
                     dismiss()
                 }
+                .foregroundColor(Color("AppAccent"))
             }
         }
     }

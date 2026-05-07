@@ -27,6 +27,12 @@ struct AddHabitView: View {
     var body: some View {
             NavigationStack {
                 
+                ZStack{
+                    //Background Color
+                    Color("AppBackground")
+                        .ignoresSafeArea()
+                
+                
                 //Form for entering habit details
                 Form {
                     
@@ -35,6 +41,8 @@ struct AddHabitView: View {
                     TextField("SF Symbol (e.g. flame)", text: $icon)
                     Stepper("Times per day: \(target)", value: $target, in: 1...20)
                 }
+                .scrollContentBackground(.hidden)
+            }
                 
                 .navigationTitle("New Habit")
                 .toolbar {ToolbarItem(placement: .cancellationAction) {
@@ -48,6 +56,7 @@ struct AddHabitView: View {
                         viewModel.addHabit(name: name, icon: icon, targetPerDay: target)
                         dismiss()
                     }
+                    .foregroundColor(Color("AppAccent"))
                 }
             }
         }

@@ -31,9 +31,19 @@ struct HomeView: View {
     var body: some View {
             NavigationStack {
                 
+                //Adding background color
+                
+                ZStack {
+                    Color("AppBackground")
+                        .ignoresSafeArea()
+                
+                
                 List {
                     ForEach(habits) { habit in
                         HabitRowView(habit: habit, viewModel: viewModel)
+                        //Adding background color
+                            .listRowBackground(Color("AppSecondary").opacity(0.55))
+                        
                             .onLongPressGesture {
                                 selectedHabit = habit
                                 showEditSheet = true
@@ -47,15 +57,18 @@ struct HomeView: View {
                         try? context.save()
                     }
                 }
+                    //Background
+                .scrollContentBackground(.hidden)
+                }
                 
-                
-                .navigationTitle("DevStreak 🔥")
-                
+                .navigationTitle("Habit Tracker")
                 .toolbar {
                     Button {
                         showAddHabit = true
                     } label: {
                         Image(systemName: "plus")
+                        .foregroundColor(Color("AppAccent"))
+                            .padding(25)
                     }
                 }
                 
@@ -77,4 +90,5 @@ struct HomeView: View {
                 
                 HomeView()
                     .modelContainer(container)
+                    //.preferredColorScheme(.dark)
             }
