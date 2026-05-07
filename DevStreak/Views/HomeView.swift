@@ -88,7 +88,6 @@ struct HomeView: View {
             #Preview {
                 let container = try! ModelContainer(for: Habit.self)
                 
-                HomeView()
+                RootView()
                     .modelContainer(container)
-                    //.preferredColorScheme(.dark)
             }

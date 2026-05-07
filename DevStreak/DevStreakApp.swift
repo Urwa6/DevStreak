@@ -14,7 +14,8 @@ import UserNotifications
 struct DevStreakApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            RootView()
+          // HomeView()
         }
         .modelContainer(for: Habit.self)
     }
