@@ -45,6 +45,7 @@ class HabitViewModel {
            // habit.completedDates.append(Date())
             habit.completedDates.append(Calendar.current.startOfDay(for: Date()))
         }
+        //Persisting data
         try? context.save()
     }
     
@@ -60,6 +61,7 @@ class HabitViewModel {
     
     ///STREAK LOGIC
     // Calculates current streak based on consecutive completion dates
+    //it reads the saved data
     func streak(for habit: Habit) -> Int {
         
         let calender = Calendar.current

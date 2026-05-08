@@ -13,6 +13,21 @@ struct StatisticsView: View {
     //Fetch all habits from SwiftData
     @Query var habits: [Habit]
     
+    //Count unique Completed days
+    func completedDays(for habit: Habit)-> Int {
+        
+        let grouped = Dictionary(grouping: habit.completedDates) {
+            Calendar.current.startOfDay(for: $0)
+        }
+        
+        let fullyCompletedDays = grouped.filter{ _, completions in
+            completions.count >= habit.targetPerDay
+            
+        }
+        return fullyCompletedDays.count
+     }
+        
+
     var body: some View{
         
         NavigationStack{
@@ -25,7 +40,7 @@ struct StatisticsView: View {
                     
                     //Mark total completeion card
                     let totalCompletions = habits.reduce(0) {
-                        $0 + $1.completedDates.count
+                        $0 + completedDays(for: $1)
                     }
             
                     VStack(spacing: 8){
@@ -46,7 +61,8 @@ struct StatisticsView: View {
                         
                         BarMark(
                             x: .value("Habit", habit.name),
-                            y: .value("Completion", habit.completedDates.count)
+                            //y: .value("Completion", habit.completedDates.count)
+                            y: .value("Completion", completedDays(for: habit))
                         )
                         .foregroundStyle(Color("AppAccent"))
                         
@@ -74,7 +90,8 @@ struct StatisticsView: View {
                             
                             Spacer()
                             
-                            Text("\(habit.completedDates.count)")
+                            //Text("\(habit.completedDates.count)")
+                            Text("\(completedDays(for: habit)) days")
                                 .foregroundColor(.secondary)
                         }
                         .padding(.vertical, 6)

@@ -14,7 +14,7 @@ struct RootView: View {
             
             HomeView()
                 .tabItem{
-                    Label("Habits", systemImage: "checkmark.circle")
+                    Label("Habits", systemImage: "bolt.house.fill")
                 }
             
             StatisticsView()
